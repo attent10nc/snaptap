@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/attent10nc/snaptap/releases/latest"><img src="https://img.shields.io/github/v/release/attent10nc/snaptap?style=for-the-badge&color=7c5cff&label=release" alt="release"></a>
   <a href="https://github.com/attent10nc/snaptap/releases"><img src="https://img.shields.io/github/downloads/attent10nc/snaptap/total?style=for-the-badge&color=00b4d8" alt="downloads"></a>
-  <a href="VT_LINK"><img src="https://img.shields.io/badge/VirusTotal-VT_RESULT-2ea043?style=for-the-badge&logo=virustotal&logoColor=white" alt="VirusTotal"></a>
+  <a href="https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e"><img src="https://img.shields.io/badge/VirusTotal-0%2F71%20clean-2ea043?style=for-the-badge&logo=virustotal&logoColor=white" alt="VirusTotal"></a>
   <a href="https://github.com/attent10nc/snaptap/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/attent10nc/snaptap/ci.yml?style=for-the-badge&label=build" alt="build"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078d4?style=for-the-badge&logo=windows&logoColor=white" alt="windows">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=for-the-badge" alt="MIT"></a>
@@ -59,8 +59,8 @@ Close the window or press <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit.
 
 | | |
 |---|---|
-| **VirusTotal** | [VT_RESULT engines flag nothing — full report](VT_LINK) |
-| **SHA-256 (v1.0.0)** | `VT_SHA256` |
+| **VirusTotal** | **0 / 71** engines detect anything — [full report](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e) |
+| **SHA-256 (v1.0.0)** | `9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e` |
 | **Built by** | [GitHub Actions](https://github.com/attent10nc/snaptap/actions/workflows/release.yml) straight from this source, see the release log |
 | **Code** | one file, [`src/main.rs`](src/main.rs), ~200 lines |
 | **Network / files / registry** | none: it only reads keys and sends keys |
@@ -72,6 +72,11 @@ Get-FileHash .\snaptap.exe -Algorithm SHA256
 ```
 
 The hash must match `SHA256SUMS.txt` from the release.
+
+<p align="center">
+  <a href="https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e"><img src="assets/virustotal.png" alt="VirusTotal: 0/71" width="90%"></a>
+  <br><sub>VirusTotal scan of the release build, click for the live report</sub>
+</p>
 
 <details>
 <summary><b>Why can an antivirus be suspicious of a keyboard tool at all?</b></summary>
@@ -113,7 +118,7 @@ Releases are built by [`.github/workflows/release.yml`](.github/workflows/releas
 - `snaptap.exe game.exe` — в другой игре;
 - `snaptap.exe --global` — везде.
 
-**Безопасность:** [отчёт VirusTotal](VT_LINK), открытый код (один файл), exe собирает GitHub Actions.
+**Безопасность:** [отчёт VirusTotal](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e), открытый код (один файл), exe собирает GitHub Actions.
 Программа не пишет нажатия в файлы и не выходит в сеть.
 
 ⚠️ В матчах на официальных серверах Valve за SOCD кикают. Правила других серверов проверяй сам.
