@@ -12,18 +12,17 @@
 </p>
 
 <p align="center">
-  <b>Snap Tap / SOCD for any keyboard.</b> When two opposite keys are held, the last one pressed wins.<br>
-  One small open-source exe. No install, no drivers, no config.
+  Snap Tap (SOCD) for any keyboard. If you hold two opposite keys, the last one you pressed wins.
 </p>
 
 <p align="center">
-  <a href="https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe"><b>⬇ Download snaptap.exe</b></a>
-  &nbsp;·&nbsp; <a href="#-русский">Русский</a>
+  <a href="https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe"><b>Download snaptap.exe</b></a>
+  &nbsp;·&nbsp; <a href="#русский">Русский</a>
 </p>
 
 ---
 
-## ✨ What it does
+## What it does
 
 <p align="center"><img src="assets/how-it-works.svg" alt="how it works" width="90%"></p>
 
@@ -33,15 +32,12 @@
 | release **D** while still holding **A** | A pressed again |
 | hold **D**, press **A**, release **D** | nothing changes, A stays |
 
-- 🎯 Pairs: **A / D** and **W / S**
-- ⚡ Low-level keyboard hook in Rust, reacts within the same keystroke
-- 🔁 Auto-repeat of an overridden key is swallowed; every other key passes through untouched
-- 🪶 &lt;200 KB, portable, no admin rights needed
+Works for A/D and W/S. Other keys aren't touched. No install, no admin rights, the exe is under 200 KB.
 
-## 🚀 Usage
+## Usage
 
-1. Download [`snaptap.exe`](https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe).
-2. Run it and switch to your game. The console shows `[ON]` / `[OFF]` as the game gains or loses focus.
+Grab `snaptap.exe` from [releases](https://github.com/attent10nc/snaptap/releases/latest) and run it.
+It prints `[ON]` when the game window is focused and `[OFF]` when it isn't.
 
 ```text
 snaptap.exe              active while cs2.exe is focused (default)
@@ -49,80 +45,60 @@ snaptap.exe game.exe     active while game.exe is focused
 snaptap.exe --global     active in every window
 ```
 
-Close the window or press <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit.
+Ctrl+C or just close the window to quit.
 
 > [!WARNING]
-> Since August 2024 Valve kicks players using SOCD / Snap Tap in matches on **official CS2 servers**.
-> Check the rules of the servers and leagues you play on. Use at your own risk.
+> Valve kicks for snap tap in matches on official CS2 servers (since Aug 2024). Check the rules of wherever you play.
 
-## 🛡️ Is it safe?
+## Antivirus / safety
 
-| | |
-|---|---|
-| **VirusTotal** | **0 / 71** engines detect anything — [full report](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e) |
-| **SHA-256 (v1.0.0)** | `9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e` |
-| **Built by** | [GitHub Actions](https://github.com/attent10nc/snaptap/actions/workflows/release.yml) straight from this source, see the release log |
-| **Code** | one file, [`src/main.rs`](src/main.rs), ~200 lines |
-| **Network / files / registry** | none: it only reads keys and sends keys |
+v1.0.0 on VirusTotal: 0/71 ([report](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e)).
+The release exe is built by [GitHub Actions](https://github.com/attent10nc/snaptap/actions/workflows/release.yml) from this repo,
+sha256 is in `SHA256SUMS.txt` next to it:
 
-Check your download yourself:
-
-```powershell
-Get-FileHash .\snaptap.exe -Algorithm SHA256
+```
+9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e  snaptap.exe
 ```
 
-The hash must match `SHA256SUMS.txt` from the release.
+All the code is in [`src/main.rs`](src/main.rs). No network, no files, no registry.
 
 <p align="center">
   <a href="https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e"><img src="assets/virustotal.png" alt="VirusTotal: 0/71" width="90%"></a>
-  <br><sub>VirusTotal scan of the release build, click for the live report</sub>
 </p>
 
-<details>
-<summary><b>Why can an antivirus be suspicious of a keyboard tool at all?</b></summary>
+If your AV ever complains: it's a global keyboard hook + SendInput, which some heuristics don't like on unsigned exes.
+Nothing gets logged or sent anywhere, build it yourself if you want to be sure.
 
-Any program that installs a global keyboard hook (`SetWindowsHookEx`) and sends keystrokes (`SendInput`)
-looks similar to a keylogger for heuristic engines, especially when it is new and unsigned. snaptap never stores,
-logs or sends keystrokes anywhere: read `src/main.rs` or build it yourself.
-</details>
+## How it works
 
-## ⚙️ How it works
+Low-level keyboard hook (`WH_KEYBOARD_LL`) keeps track of what's physically held. When you press the opposite
+key, the real event is blocked and it sends `old key up` + `new key down` via `SendInput`. Let go of the new key and
+the old one gets pressed again if you're still holding it. Own events are tagged in `dwExtraInfo` so the hook skips them.
 
-A `WH_KEYBOARD_LL` hook tracks which keys are physically held. When the opposite key of a held key goes
-down, the original event is blocked and `SendInput` emits `<held key up>, <new key down>` by scancode.
-Releasing the newer key re-presses the older one if it is still held. Injected events carry a marker in
-`dwExtraInfo` so the hook skips its own input.
-
-## 🔨 Build from source
+## Building
 
 ```bash
 git clone https://github.com/attent10nc/snaptap
 cd snaptap
-cargo test            # SOCD logic tests
-cargo build --release # target/release/snaptap.exe
+cargo test
+cargo build --release
 ```
 
-Releases are built by [`.github/workflows/release.yml`](.github/workflows/release.yml) when a `v*` tag is pushed.
+Pushing a `v*` tag builds a release.
 
 ---
 
-## 🇷🇺 Русский
+## Русский
 
-**snaptap** — Snap Tap (SOCD) для любой клавиатуры: из двух противоположных клавиш (A/D, W/S) работает
-последняя нажатая. Зажал A, нажал D, и игра видит только D. Отпустил D, и снова работает A. Нет момента,
-когда обе клавиши гасят друг друга и персонаж останавливается.
+Snap tap для любой клавы. Держишь A, жмёшь D: игра видит только D. Отпустил D, снова идёт A.
+Не бывает такого, что A и D зажаты вместе и персонаж встаёт.
 
-**Запуск:** скачай [`snaptap.exe`](https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe)
-и запусти.
-- `snaptap.exe` — работает только когда в фокусе CS2;
-- `snaptap.exe game.exe` — в другой игре;
-- `snaptap.exe --global` — везде.
+Качаешь `snaptap.exe` из релизов и запускаешь. По умолчанию работает только в CS2,
+`snaptap.exe game.exe` для другой игры, `snaptap.exe --global` везде.
 
-**Безопасность:** [отчёт VirusTotal](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e), открытый код (один файл), exe собирает GitHub Actions.
-Программа не пишет нажатия в файлы и не выходит в сеть.
+VirusTotal 0/71 ([отчёт](https://www.virustotal.com/gui/file/9fd3822f48b5a225b3c1ab2ecbf3c67538534f691520a362ddb8f95e1c30080e)), exe собирается через GitHub Actions, код открыт.
+На официальных серверах Valve в матчах за snap tap кикают, имей в виду.
 
-⚠️ В матчах на официальных серверах Valve за SOCD кикают. Правила других серверов проверяй сам.
-
-## 📄 License
+## License
 
 [MIT](LICENSE)

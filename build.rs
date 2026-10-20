@@ -1,4 +1,4 @@
-// Embeds the icon and version info into snaptap.exe (also helps antivirus heuristics).
+// icon + version info for the exe
 fn main() {
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
         let mut res = winresource::WindowsResource::new();
