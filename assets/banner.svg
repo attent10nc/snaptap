@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#161b2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#00d4ff"/>
+    </linearGradient>
+    <linearGradient id="keyOn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2f45"/>
+      <stop offset="1" stop-color="#1b1f30"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="400" rx="24" fill="url(#bg)"/>
+  <rect width="1280" height="400" rx="24" fill="url(#grid)"/>
+  <circle cx="1010" cy="200" r="190" fill="#7c5cff" opacity="0.10"/>
+  <circle cx="1100" cy="140" r="120" fill="#00d4ff" opacity="0.07"/>
+
+  <!-- title -->
+  <text x="90" y="185" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="104" font-weight="800" fill="#ffffff" letter-spacing="-3">snap<tspan fill="url(#accent)">tap</tspan></text>
+  <text x="94" y="240" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="30" fill="#aab3c5">Last input wins. A/D and W/S never cancel out.</text>
+  <g font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#cfd6e4">
+    <rect x="94" y="280" width="150" height="40" rx="20" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="169" y="307" text-anchor="middle">any keyboard</text>
+    <rect x="258" y="280" width="128" height="40" rx="20" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="322" y="307" text-anchor="middle">&lt;200 KB</text>
+    <rect x="400" y="280" width="128" height="40" rx="20" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="464" y="307" text-anchor="middle">no install</text>
+    <rect x="542" y="280" width="112" height="40" rx="20" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="598" y="307" text-anchor="middle">Rust</text>
+  </g>
+
+  <!-- keys -->
+  <g font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif" font-weight="700" text-anchor="middle">
+    <g opacity="0.45">
+      <rect x="840" y="150" width="110" height="110" rx="18" fill="url(#keyOn)" stroke="#ffffff" stroke-opacity="0.15" stroke-width="2"/>
+      <rect x="840" y="250" width="110" height="10" rx="5" fill="#000" opacity="0.35"/>
+      <text x="895" y="225" font-size="56" fill="#8b93a7">A</text>
+    </g>
+    <g filter="url(#glow)">
+      <rect x="1070" y="158" width="110" height="110" rx="18" fill="#1d1a3a" stroke="url(#accent)" stroke-width="3"/>
+      <text x="1125" y="233" font-size="56" fill="#ffffff">D</text>
+    </g>
+    <path d="M968 205 H1050" stroke="#4f8bff" stroke-width="5" stroke-linecap="round"/>
+    <path d="M1036 191 L1054 205 L1036 219" fill="none" stroke="#00d4ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1010" y="312" font-size="18" font-weight="600" fill="#8b93a7">A held → D pressed → only D counts</text>
+  </g>
+</svg>

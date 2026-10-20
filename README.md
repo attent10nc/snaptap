@@ -1,7 +1,31 @@
-# snaptap
+<p align="center">
+  <img src="assets/banner.svg" alt="snaptap" width="100%">
+</p>
 
-Tiny Windows **Snap Tap / SOCD** tool: when two opposite keys are held, the last one pressed wins.
-Works with any keyboard. ~150 KB, no install, no config.
+<p align="center">
+  <a href="https://github.com/attent10nc/snaptap/releases/latest"><img src="https://img.shields.io/github/v/release/attent10nc/snaptap?style=for-the-badge&color=7c5cff&label=release" alt="release"></a>
+  <a href="https://github.com/attent10nc/snaptap/releases"><img src="https://img.shields.io/github/downloads/attent10nc/snaptap/total?style=for-the-badge&color=00b4d8" alt="downloads"></a>
+  <a href="VT_LINK"><img src="https://img.shields.io/badge/VirusTotal-VT_RESULT-2ea043?style=for-the-badge&logo=virustotal&logoColor=white" alt="VirusTotal"></a>
+  <a href="https://github.com/attent10nc/snaptap/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/attent10nc/snaptap/ci.yml?style=for-the-badge&label=build" alt="build"></a>
+  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078d4?style=for-the-badge&logo=windows&logoColor=white" alt="windows">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=for-the-badge" alt="MIT"></a>
+</p>
+
+<p align="center">
+  <b>Snap Tap / SOCD for any keyboard.</b> When two opposite keys are held, the last one pressed wins.<br>
+  One small open-source exe. No install, no drivers, no config.
+</p>
+
+<p align="center">
+  <a href="https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe"><b>⬇ Download snaptap.exe</b></a>
+  &nbsp;·&nbsp; <a href="#-русский">Русский</a>
+</p>
+
+---
+
+## ✨ What it does
+
+<p align="center"><img src="assets/how-it-works.svg" alt="how it works" width="90%"></p>
 
 | You do | The game gets |
 |---|---|
@@ -9,46 +33,91 @@ Works with any keyboard. ~150 KB, no install, no config.
 | release **D** while still holding **A** | A pressed again |
 | hold **D**, press **A**, release **D** | nothing changes, A stays |
 
-Pairs: **A/D** and **W/S**. Auto-repeat of an overridden key is swallowed, every other key passes through.
+- 🎯 Pairs: **A / D** and **W / S**
+- ⚡ Low-level keyboard hook in Rust, reacts within the same keystroke
+- 🔁 Auto-repeat of an overridden key is swallowed; every other key passes through untouched
+- 🪶 &lt;200 KB, portable, no admin rights needed
 
-## Usage
+## 🚀 Usage
 
-Download `snaptap.exe` from [Releases](../../releases) and run it.
+1. Download [`snaptap.exe`](https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe).
+2. Run it and switch to your game. The console shows `[ON]` / `[OFF]` as the game gains or loses focus.
 
-```
+```text
 snaptap.exe              active while cs2.exe is focused (default)
 snaptap.exe game.exe     active while game.exe is focused
 snaptap.exe --global     active in every window
 ```
 
-The console prints `[ON]` / `[OFF]` as focus changes. Ctrl+C quits.
+Close the window or press <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit.
 
-> Valve kicks players using SOCD/Snap Tap in matches on official CS2 servers (since Aug 2024).
-> Check the rules of the servers or leagues you play on.
+> [!WARNING]
+> Since August 2024 Valve kicks players using SOCD / Snap Tap in matches on **official CS2 servers**.
+> Check the rules of the servers and leagues you play on. Use at your own risk.
 
-## How it works
+## 🛡️ Is it safe?
 
-A low-level keyboard hook (`WH_KEYBOARD_LL`) tracks which keys are physically down. When the opposite
-key of a held key is pressed, the original event is blocked and `SendInput` sends
-`<held key up>, <new key down>` by scancode. Injected events are tagged via `dwExtraInfo`, so the hook ignores its own input.
+| | |
+|---|---|
+| **VirusTotal** | [VT_RESULT engines flag nothing — full report](VT_LINK) |
+| **SHA-256 (v1.0.0)** | `VT_SHA256` |
+| **Built by** | [GitHub Actions](https://github.com/attent10nc/snaptap/actions/workflows/release.yml) straight from this source, see the release log |
+| **Code** | one file, [`src/main.rs`](src/main.rs), ~200 lines |
+| **Network / files / registry** | none: it only reads keys and sends keys |
 
-## Build
+Check your download yourself:
 
+```powershell
+Get-FileHash .\snaptap.exe -Algorithm SHA256
 ```
-cargo build --release      # target/release/snaptap.exe
-cargo test                 # SOCD logic tests
+
+The hash must match `SHA256SUMS.txt` from the release.
+
+<details>
+<summary><b>Why can an antivirus be suspicious of a keyboard tool at all?</b></summary>
+
+Any program that installs a global keyboard hook (`SetWindowsHookEx`) and sends keystrokes (`SendInput`)
+looks similar to a keylogger for heuristic engines, especially when it is new and unsigned. snaptap never stores,
+logs or sends keystrokes anywhere: read `src/main.rs` or build it yourself.
+</details>
+
+## ⚙️ How it works
+
+A `WH_KEYBOARD_LL` hook tracks which keys are physically held. When the opposite key of a held key goes
+down, the original event is blocked and `SendInput` emits `<held key up>, <new key down>` by scancode.
+Releasing the newer key re-presses the older one if it is still held. Injected events carry a marker in
+`dwExtraInfo` so the hook skips its own input.
+
+## 🔨 Build from source
+
+```bash
+git clone https://github.com/attent10nc/snaptap
+cd snaptap
+cargo test            # SOCD logic tests
+cargo build --release # target/release/snaptap.exe
 ```
 
-Pushing a `v*` tag builds the exe and attaches it to a GitHub Release (`.github/workflows/release.yml`).
+Releases are built by [`.github/workflows/release.yml`](.github/workflows/release.yml) when a `v*` tag is pushed.
 
 ---
 
-### RU
+## 🇷🇺 Русский
 
-Snap Tap для любой клавиатуры: из двух противоположных клавиш (A/D, W/S) работает последняя нажатая.
-Запуск: `snaptap.exe` (только в CS2), `snaptap.exe game.exe` (другая игра), `snaptap.exe --global` (везде).
-В матчах на официальных серверах Valve за SOCD кикают.
+**snaptap** — Snap Tap (SOCD) для любой клавиатуры: из двух противоположных клавиш (A/D, W/S) работает
+последняя нажатая. Зажал A, нажал D, и игра видит только D. Отпустил D, и снова работает A. Нет момента,
+когда обе клавиши гасят друг друга и персонаж останавливается.
 
-## License
+**Запуск:** скачай [`snaptap.exe`](https://github.com/attent10nc/snaptap/releases/latest/download/snaptap.exe)
+и запусти.
+- `snaptap.exe` — работает только когда в фокусе CS2;
+- `snaptap.exe game.exe` — в другой игре;
+- `snaptap.exe --global` — везде.
 
-MIT
+**Безопасность:** [отчёт VirusTotal](VT_LINK), открытый код (один файл), exe собирает GitHub Actions.
+Программа не пишет нажатия в файлы и не выходит в сеть.
+
+⚠️ В матчах на официальных серверах Valve за SOCD кикают. Правила других серверов проверяй сам.
+
+## 📄 License
+
+[MIT](LICENSE)

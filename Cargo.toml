@@ -1,6 +1,8 @@
 [package]
 name = "snaptap"
 version = "1.0.0"
+authors = ["attent10nc"]
+repository = "https://github.com/attent10nc/snaptap"
 edition = "2021"
 description = "Snap Tap / SOCD last-input-priority for A/D and W/S on Windows"
 license = "MIT"
@@ -17,3 +19,6 @@ windows-sys = { version = "0.59", features = [
 opt-level = 3
 lto = true
 panic = "abort"
+
+[build-dependencies]
+winresource = "0.1"
